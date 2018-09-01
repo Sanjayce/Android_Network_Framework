@@ -9,6 +9,9 @@ import com.xl.retrofit.util.IpModle;
 import com.xl.retrofit.util.IpService;
 import com.xl.retrofit.util.IpServiceForPost;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,22 +45,27 @@ public class MainActivity extends AppCompatActivity {
      * 如果想中断网络请求则可以使用 call.cancel()。
      */
 
-    private void getRetrofitForGET(String ip){
+    private void getRetrofitForGET(String ip) {
 
         String url = "http://ip.taobao.com/service/";
 
+        OkHttpClient.Builder httpClient = new OkHttpClient().newBuilder();
+        httpClient.connectTimeout(5, TimeUnit.SECONDS);
+
+
         //创建Retrofit
         Retrofit retrofit = new Retrofit.Builder()
+                .client(httpClient.build())
                 .baseUrl(url)
                 //增加返回值为String的支持
                 //.addConverterFactory(ScalarsConverterFactory.create())
                 //增加返回值为json的支持
-                .addConverterFactory(GsonConverterFactory.create())
+                //.addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         //用Retrofit创建接口文件
-        IpService ipService =  retrofit.create(IpService.class);
-        Call<IpModle> call =  ipService.getIpMsg(ip);
+        IpService ipService = retrofit.create(IpService.class);
+        Call<IpModle> call = ipService.getIpMsg(ip);
 
         //用Call请求网络并处理回调;
         call.enqueue(new Callback<IpModle>() {
@@ -69,12 +77,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<IpModle> call, Throwable t) {
-                Log.e("onFailure","Failure.......");
+                Log.e("onFailure", "Failure.......");
             }
         });
     }
 
-    private void getRetrofitForPOST(String ip){
+    private void getRetrofitForPOST(String ip) {
 
         String url = "http://ip.taobao.com/service/";
 
@@ -84,12 +92,12 @@ public class MainActivity extends AppCompatActivity {
                 //增加返回值为String的支持
                 //.addConverterFactory(ScalarsConverterFactory.create())
                 //增加返回值为json的支持
-                .addConverterFactory(GsonConverterFactory.create())
+                //.addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         //用Retrofit创建接口文件
-        IpServiceForPost ipService =  retrofit.create(IpServiceForPost.class);
-        Call<IpModle> call =  ipService.getIpMsg(ip);
+        IpServiceForPost ipService = retrofit.create(IpServiceForPost.class);
+        Call<IpModle> call = ipService.getIpMsg(ip);
 
         //用Call请求网络并处理回调;
         call.enqueue(new Callback<IpModle>() {
@@ -101,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<IpModle> call, Throwable t) {
-                Log.e("onFailure","Failure.......");
+                Log.e("onFailure", "Failure.......");
             }
         });
     }

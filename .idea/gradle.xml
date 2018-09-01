@@ -11,6 +11,8 @@
             <option value="$PROJECT_DIR$/okhttp2" />
             <option value="$PROJECT_DIR$/okhttp3" />
             <option value="$PROJECT_DIR$/retrofit" />
+            <option value="$PROJECT_DIR$/rxjava" />
+            <option value="$PROJECT_DIR$/rxjava-retrofit" />
             <option value="$PROJECT_DIR$/volley" />
           </set>
         </option>

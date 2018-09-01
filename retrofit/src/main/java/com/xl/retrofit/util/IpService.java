@@ -1,17 +1,8 @@
 package com.xl.retrofit.util;
 
-import java.util.Map;
-
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.QueryMap;
 
 /**
  * Retrofit提供的请求方式注解有@GET和@POST等，分别代表GET请求和POST请求;

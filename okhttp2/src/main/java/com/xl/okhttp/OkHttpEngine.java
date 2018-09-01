@@ -2,12 +2,16 @@ package com.xl.okhttp;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import java.io.File;
@@ -71,6 +75,39 @@ public class OkHttpEngine {
         dealResult(call,callback);
     }
 
+    /**
+     * 同步GET请求
+     */
+    public void getSyncHttp(String url) {
+        try {
+            //获取请求Request
+            final Request request = new Request.Builder().url(url).build();
+            //请求回调
+            Call call = mOkHttpClient.newCall(request);
+            Response response = call.execute();
+            if (response.isSuccessful()) {
+                String str = response.body().toString();
+                Log.i("Response", str);
+            } else {
+                Log.i("Response", "**********");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 异步POST请求
+     */
+    public void postAsynHttp(String url,ResultCallback callback) {
+        //请求报文
+        RequestBody formBody = new FormEncodingBuilder().add("size", "10").build();
+        //添加请求报文到请求
+        Request request = new Request.Builder().url(url).post(formBody).build();
+        Call call = mOkHttpClient.newCall(request);
+        dealResult(call,callback);
+    }
 
     /**
      * 回调返回值函数

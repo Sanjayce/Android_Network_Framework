@@ -37,19 +37,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textView = (TextView) findViewById(R.id.textView2);
-
-        //getAscyHttp("http://www.hao123.com");
-        //getSyncHttp("http://www.hao123.com");
-        //postAsynHttp("http://api.1-blog.com/biz/bizserver/article/list.do");
-        //setCacheForOkHttp("http://www.hao123.com");
         fun();
     }
 
     private void fun() {
-
         // 封装后演示
         OkHttpEngine engine = OkHttpEngine.getmInstance();
         engine.setHttpCache(this);
+
         engine.getAscyHttp("http://www.hao123.com", new ResultCallback() {
             @Override
             public void onFailure(Request request, Exception e) {
@@ -62,139 +57,20 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplication(), "请求成功", Toast.LENGTH_SHORT).show();
             }
         });
-    }
 
+        engine.getSyncHttp("http://www.hao123.com");
 
-    /**
-     * 异步GET请求
-     */
-    private void getAscyHttp(String url) {
-        try {
-            //获取OkHttpClient
-            OkHttpClient httpClient = new OkHttpClient();
-            //获取请求Request
-            final Request request = new Request.Builder().url(url).build();
-            //请求回调
-            Call call = httpClient.newCall(request);
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure(Request request, IOException e) {
-                    Log.e("onFailure", request.toString());
-                }
-
-                @Override
-                public void onResponse(Response response) throws IOException {
-                    String str = response.body().string();//获取响应文数据
-                    Log.i("onResponse", str);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplication(), "请求成功", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 同步GET请求
-     */
-    private void getSyncHttp(String url) {
-        try {
-            //获取OkHttpClient
-            OkHttpClient httpClient = new OkHttpClient();
-            //获取请求Request
-            final Request request = new Request.Builder().url(url).build();
-            //请求回调
-            Call call = httpClient.newCall(request);
-            Response response = call.execute();
-            if (response.isSuccessful()) {
-                String str = response.body().toString();
-                Log.i("Response", str);
-            } else {
-                Log.i("Response", "**********");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 异步POST请求
-     */
-    private void postAsynHttp(String url) {
-        OkHttpClient mOkHttpClient = new OkHttpClient();
-        //请求报文
-        RequestBody formBody = new FormEncodingBuilder().add("size", "10").build();
-        //添加请求报文到请求
-        Request request = new Request.Builder().url(url).post(formBody).build();
-        Call call = mOkHttpClient.newCall(request);
-        call.enqueue(new Callback() {
+        engine.postAsynHttp("http://www.hao123.com",new ResultCallback() {
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure(Request request, Exception e) {
+                Log.e("onFailure", request.toString());
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
-                String str = response.body().string();
-                Log.i("onResponse", str);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "请求成功", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            public void onResponse(Response response) {
+                textView.setText(response.toString());
+                Toast.makeText(getApplication(), "请求成功", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-    /**
-     * 缓存设置，超时时间
-     */
-
-    private void setCacheForOkHttp(String str) {
-        OkHttpClient httpClient = new OkHttpClient();
-
-        File sdcache = getExternalCacheDir();//缓存路径
-        int cacheSize = 10 * 1024 * 1024;//缓存大小
-        httpClient.setCache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
-        //设置链接，响应超时
-        httpClient.setConnectTimeout(15, TimeUnit.SECONDS);
-        httpClient.setWriteTimeout(20, TimeUnit.SECONDS);
-        httpClient.setReadTimeout(20, TimeUnit.SECONDS);
-
-        final Request request = new Request.Builder().url(str).build();
-        //.cacheControl(CacheControl.FORCE_NETWORK) //只读取网络数据
-
-        Call call = httpClient.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                Log.i("onFailure", request.toString());
-            }
-
-            @Override
-            public void onResponse(Response response) throws IOException {
-                if (response.cacheResponse() != null) {
-                    String str = response.cacheResponse().toString();
-                    Log.i("onResponse", "cache" + str);
-                } else {
-                    String str = response.networkResponse().toString();
-                    Log.i("onResponse", "network" + str);
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "请求成功", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-    }
-
 }

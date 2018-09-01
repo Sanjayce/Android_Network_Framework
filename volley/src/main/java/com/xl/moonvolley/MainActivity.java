@@ -37,10 +37,10 @@ public class MainActivity extends AppCompatActivity {
         imageView = (ImageView) findViewById(R.id.imageView);
         //获取创建消息列队对象
         mQueue = Volley.newRequestQueue(getApplicationContext());
-        //useStringRequest("http://www.baidu.com");
+        useStringRequest("http://www.baidu.com");
         useJsonRequest("http://www.imooc.com/api/teacher?type=4&num=30");
         useImageRequst("http://img.my.csdn.net/uploads/201603/26/1458988468_5804.jpg");
-        //useImageLoader("http://img.my.csdn.net/uploads/201603/26/1458988468_5804.jpg");
+        useImageLoader("http://img.my.csdn.net/uploads/201603/26/1458988468_5804.jpg");
     }
 
     /**
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        textView.setText(response);
+                        Log.e("onResponse", response);
                     }
                 }, new Response.ErrorListener() {
             @Override
